@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Counter</string>
+    <string name="toast_msg">The counter is at: %1$d</string>
+</resources>
