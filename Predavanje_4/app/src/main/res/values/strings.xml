@@ -7,4 +7,5 @@
     <string name="login">Login</string>
     <string name="my_message_of_the_day">My message of the day:</string>
     <string name="change_message_of_the_day">Change message of the day</string>
+    <string name="field_cannot_be_empty">Field cannot be empty</string>
 </resources>
