@@ -8,7 +8,7 @@
 
     <item
         android:id="@+id/menu_item_contact"
-        android:title="@string/contacts"
+        android:title="@string/directory"
         android:icon="@drawable/ic_baseline_contact" />
 
 </menu>
