@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.mrbojler.predavanje5.databinding.FragmentDirectoryBinding;
 
 public class DirectoryFragment extends Fragment {
@@ -29,7 +31,16 @@ public class DirectoryFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
+        StateAdapter stateAdapter = new StateAdapter(requireActivity());
+        binding.viewPager.setAdapter(stateAdapter);
+        TabLayoutMediator mediator = new TabLayoutMediator(
+                binding.tabLayout,
+                binding.viewPager,
+                (tab, position) -> {
+                    tab.setText(stateAdapter.getTabTitle(position));
+                }
+        );
+        mediator.attach();
     }
 
     @Override
