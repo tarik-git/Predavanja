@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="trivia">Trivia</string>
+    <string name="date">Date</string>
+    <string name="year">Year</string>
+    <string name="math">Math</string>
+    <string name="enter_specific_number">Enter specific number</string>
+    <string name="ask_question">Ask question</string>
+    <string name="trivia_question_label">Trivia question label:</string>
+    <string name="date_question_label">Date question label:</string>
+    <string name="year_question_label">Year question label:</string>
+    <string name="math_question_label">Math question label:</string>
+    <string name="failed_to_retrieve_data">Failed to retrieve data</string>
+</resources>
