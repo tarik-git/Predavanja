@@ -7,6 +7,9 @@ import android.os.Bundle;
 
 import com.mrbojler.listapp.databinding.ActivityMainBinding;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
@@ -22,7 +25,16 @@ public class MainActivity extends AppCompatActivity {
         // 2. Napraviti layout za ViewHolder
         // res -> layout -> item_name.xml
         // 3. Napraviti ViewHolder
-
-
+        // 4. Napraviti Adapter
+        NamesAdapter adapter = new NamesAdapter();
+        binding.recyclerView.setAdapter(adapter);
+        List<String> nameList = new ArrayList<>();
+        nameList.add("Ena");
+        nameList.add("Nedzad");
+        nameList.add("Edin");
+        nameList.add("Anes");
+        nameList.add("Tarik");
+        nameList.add("Elmin");
+        adapter.setListOfNames(nameList);
     }
 }
