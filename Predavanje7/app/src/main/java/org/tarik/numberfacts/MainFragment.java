@@ -32,6 +32,22 @@ public class MainFragment extends Fragment {
 
     private String type;
     private NumbersService numbersService;
+    private Callback<MainResponse> callback = new Callback<MainResponse>() {
+        @Override
+        public void onResponse(Call<MainResponse> call, Response<MainResponse> response) {
+            if (response.isSuccessful()) {
+                MainResponse mainResponse = response.body();
+                if (mainResponse != null) {
+                    binding.answerTextView.setText(mainResponse.text);
+                }
+            }
+        }
+
+        @Override
+        public void onFailure(Call<MainResponse> call, Throwable t) {
+            binding.answerTextView.setText("Failed to retrieve data");
+        }
+    };
 
     public static MainFragment getInstance(String type) {
         MainFragment fragment = new MainFragment();
@@ -73,39 +89,55 @@ public class MainFragment extends Fragment {
         if (type != null) {
             if (type.equals(TYPE_TRIVIA)) {
                 binding.titleTextView.setText(R.string.trivia_question_label);
-
-                binding.askQuestionButton.setOnClickListener(v -> {
-                    Log.d("historia", "clck");
-                    numbersService.getTriviaAnswer().enqueue(new Callback<MainResponse>() {
-                        @Override
-                        public void onResponse(Call<MainResponse> call, Response<MainResponse> response) {
-                            Log.d("historia", "onResponse: " + response);
-                            Toast.makeText(requireContext(), "response", Toast.LENGTH_SHORT).show();
-                            if (response.isSuccessful()) {
-                                MainResponse mainResponse = response.body();
-                                if (mainResponse != null) {
-                                    binding.answerTextView.setText(mainResponse.text);
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<MainResponse> call, Throwable t) {
-                            Toast.makeText(requireContext(), "failure", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                });
-
+                binding.askQuestionButton.setOnClickListener(this::onAskTriviaQuestion);
             } else if (type.equals(TYPE_DATE)) {
                 binding.titleTextView.setText(R.string.date_question_label);
+                binding.askQuestionButton.setOnClickListener(this::onAskDateQuestion);
             } else if (type.equals(TYPE_MATH)) {
                 binding.titleTextView.setText(R.string.math_question_label);
+                binding.askQuestionButton.setOnClickListener(this::onAskMathQuestion);
             } else if (type.equals(TYPE_YEAR)) {
                 binding.titleTextView.setText(R.string.year_question_label);
+                binding.askQuestionButton.setOnClickListener(this::onAskYearQuestion);
             }
         }
 
+    }
+
+    private void onAskTriviaQuestion(View view) {
+        String numberText = binding.numberEditText.getText().toString();
+        if (!numberText.isEmpty()) {
+            numbersService.getTriviaAnswer(numberText).enqueue(callback);
+        } else {
+            numbersService.getTriviaAnswer("random").enqueue(callback);
+        }
+    }
+
+    private void onAskYearQuestion(View view) {
+        String numberText = binding.numberEditText.getText().toString();
+        if (!numberText.isEmpty()) {
+            numbersService.getYearAnswer(numberText).enqueue(callback);
+        } else {
+            numbersService.getYearAnswer("random").enqueue(callback);
+        }
+    }
+
+    private void onAskDateQuestion(View view) {
+        String numberText = binding.numberEditText.getText().toString();
+        if (!numberText.isEmpty()) {
+            numbersService.getDateAnswer(numberText).enqueue(callback);
+        } else {
+            numbersService.getDateAnswer("random").enqueue(callback);
+        }
+    }
+
+    private void onAskMathQuestion(View view) {
+        String numberText = binding.numberEditText.getText().toString();
+        if (!numberText.isEmpty()) {
+            numbersService.getMathAnswer(numberText).enqueue(callback);
+        } else {
+            numbersService.getMathAnswer("random").enqueue(callback);
+        }
     }
 
     @Override
