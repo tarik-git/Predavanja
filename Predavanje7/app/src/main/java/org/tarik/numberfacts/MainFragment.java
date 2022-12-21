@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,9 +28,26 @@ public class MainFragment extends Fragment {
     public static final String TYPE_DATE = "date";
     public static final String TYPE_YEAR = "year";
     public static final String TYPE_MATH = "math";
+    private static final String BUNDLE_ANSWER = "BUNDLE_ANSWER";
+    private static final String TAG = "MainFragment";
 
     private String type;
     private NumbersService numbersService;
+    private final Callback<MainResponse> callback = new Callback<MainResponse>() {
+        @Override
+        public void onResponse(@NonNull Call<MainResponse> call, Response<MainResponse> response) {
+            if (response.isSuccessful()) {
+                MainResponse mainResponse = response.body();
+                if (mainResponse != null) {
+                    binding.answerTextView.setText(mainResponse.text);
+                }
+            }
+        }
+
+        @Override
+        public void onFailure(@NonNull Call<MainResponse> call, @NonNull Throwable t) {
+        }
+    };
 
     public static MainFragment getInstance(String type) {
         MainFragment fragment = new MainFragment();
@@ -70,42 +86,87 @@ public class MainFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (type != null) {
-            if (type.equals(TYPE_TRIVIA)) {
-                binding.titleTextView.setText(R.string.trivia_question_label);
-
-                binding.askQuestionButton.setOnClickListener(v -> {
-                    Log.d("historia", "clck");
-                    numbersService.getTriviaAnswer().enqueue(new Callback<MainResponse>() {
-                        @Override
-                        public void onResponse(Call<MainResponse> call, Response<MainResponse> response) {
-                            Log.d("historia", "onResponse: " + response);
-                            Toast.makeText(requireContext(), "response", Toast.LENGTH_SHORT).show();
-                            if (response.isSuccessful()) {
-                                MainResponse mainResponse = response.body();
-                                if (mainResponse != null) {
-                                    binding.answerTextView.setText(mainResponse.text);
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<MainResponse> call, Throwable t) {
-                            Toast.makeText(requireContext(), "failure", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                });
-
-            } else if (type.equals(TYPE_DATE)) {
-                binding.titleTextView.setText(R.string.date_question_label);
-            } else if (type.equals(TYPE_MATH)) {
-                binding.titleTextView.setText(R.string.math_question_label);
-            } else if (type.equals(TYPE_YEAR)) {
-                binding.titleTextView.setText(R.string.year_question_label);
+        if (savedInstanceState != null) {
+            String answer = savedInstanceState.getString(BUNDLE_ANSWER, "");
+            if (answer != null && !answer.isEmpty()) {
+                binding.answerTextView.setText(answer);
             }
         }
 
+        if (type != null) {
+            if (type.equals(TYPE_TRIVIA)) {
+                setupFragmentType(
+                        getString(R.string.trivia_question_label),
+                        v -> onAskTriviaQuestionClick()
+                );
+            } else if (type.equals(TYPE_DATE)) {
+                setupFragmentType(
+                        getString(R.string.date_question_label),
+                        v -> onAskDateQuestionClick()
+                );
+            } else if (type.equals(TYPE_MATH)) {
+                setupFragmentType(
+                        getString(R.string.math_question_label),
+                        v -> onAskMathQuestionClick()
+                );
+            } else if (type.equals(TYPE_YEAR)) {
+                setupFragmentType(
+                        getString(R.string.year_question_label),
+                        v -> onAskYearQuestionClick()
+                );
+            }
+
+        }
+
+    }
+
+    private void setupFragmentType(String label, View.OnClickListener listener) {
+        binding.titleTextView.setText(label);
+        binding.askQuestionButton.setOnClickListener(listener);
+    }
+
+    private void onAskTriviaQuestionClick() {
+        String numberText = binding.numberEditText.getText().toString();
+        if (numberText.isEmpty()) {
+            numbersService.getTriviaAnswer("random").enqueue(callback);
+        } else {
+            numbersService.getTriviaAnswer(numberText).enqueue(callback);
+        }
+    }
+
+    private void onAskDateQuestionClick() {
+        String numberText = binding.numberEditText.getText().toString();
+        if (numberText.isEmpty()) {
+            numbersService.getDateAnswer("random").enqueue(callback);
+        } else {
+            numbersService.getDateAnswer(numberText).enqueue(callback);
+        }
+    }
+
+    private void onAskYearQuestionClick() {
+        String numberText = binding.numberEditText.getText().toString();
+        if (numberText.isEmpty()) {
+            numbersService.getYearAnswer("random").enqueue(callback);
+        } else {
+            numbersService.getYearAnswer(numberText).enqueue(callback);
+        }
+    }
+
+    private void onAskMathQuestionClick() {
+        String numberText = binding.numberEditText.getText().toString();
+        if (numberText.isEmpty()) {
+            numbersService.getMathAnswer("random").enqueue(callback);
+        } else {
+            numbersService.getMathAnswer(numberText).enqueue(callback);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        Log.d(TAG, "onSaveInstanceState: ");
+        super.onSaveInstanceState(outState);
+        String answerText = binding.answerTextView.toString();
+        outState.putString(BUNDLE_ANSWER, answerText);
     }
 
     @Override
