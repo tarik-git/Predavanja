@@ -5,7 +5,7 @@ import retrofit2.http.GET;
 
 public interface NumbersService {
 
-    @GET("random/trivia")
+    @GET("random/trivia?json")
     Call<MainResponse> getTriviaAnswer();
 
 }
