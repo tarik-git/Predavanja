@@ -2,10 +2,13 @@ package com.tarik.dogsapplication.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class DogResponse {
+import java.util.List;
+import java.util.Map;
+
+public class BreedResponse {
 
     @SerializedName("message")
-    public String message;
+    public Map<String, List<String>> message;
     @SerializedName("status")
     public String status;
 
