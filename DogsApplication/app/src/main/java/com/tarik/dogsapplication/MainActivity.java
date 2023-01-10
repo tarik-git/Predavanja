@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setupFragment(new DogFragment());
+        setupFragment(DogFragment.getInstance(null));
         binding.bottomNavigationView.setSelectedItemId(R.id.menu_item_home);
         binding.bottomNavigationView.setOnItemSelectedListener(this::onNavigationItemSelected);
     }
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean onNavigationItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_item_home) {
-            setupFragment(new DogFragment());
+            setupFragment(DogFragment.getInstance(null));
         } else if (itemId == R.id.menu_item_discover) {
             setupFragment(new SearchFragment());
         } else {

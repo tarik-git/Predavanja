@@ -13,7 +13,16 @@ import java.util.List;
 
 public class DogBreedAdapter extends RecyclerView.Adapter<BreedItemViewHolder> {
 
+    public interface OnBreedClickListener {
+        void onClick(String breed);
+    }
+
     private List<String> list = new ArrayList<>();
+    private OnBreedClickListener listener;
+
+    public DogBreedAdapter(OnBreedClickListener listener) {
+        this.listener = listener;
+    }
 
     public void setList(List<String> list) {
         this.list = list;
@@ -30,7 +39,7 @@ public class DogBreedAdapter extends RecyclerView.Adapter<BreedItemViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull BreedItemViewHolder holder, int position) {
-        holder.onBind(list.get(position));
+        holder.onBind(list.get(position), listener);
     }
 
     @Override

@@ -16,8 +16,13 @@ public class BreedItemViewHolder extends RecyclerView.ViewHolder {
         this.binding = binding;
     }
 
-    public void onBind(String breedName) {
+    public void onBind(String breedName, DogBreedAdapter.OnBreedClickListener listener) {
         binding.breedNameTextView.setText(breedName);
+        binding.getRoot().setOnClickListener(view -> {
+            if (listener != null) {
+                listener.onClick(breedName);
+            }
+        });
     }
 
 }

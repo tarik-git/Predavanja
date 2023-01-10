@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DogRetrofitInstance {
 
-    private static String BASE_URL = "https://dog.ceo/api/breeds/";
+    private static String BASE_URL = "https://dog.ceo/api/";
     private static Retrofit instance = null;
 
     private DogRetrofitInstance() {
